@@ -16,23 +16,18 @@ namespace Numa
 		{
 			nicArr = NetworkInterface.GetAllNetworkInterfaces();
 		}
-		public static void UpdateNetworkInterface()
+		public static NetworkInterfaceStatus fetchNetworkStatus(int NIC)
 		{
-			for (int i = 0; i < nicArr.Length; i++) {
-				Console.WriteLine ("---------------\nNIC " + i);
-				NetworkInterface nic = nicArr [i];
-				IPv4InterfaceStatistics interfaceStats = nic.GetIPv4Statistics ();
-				int bytesSentSpeed = (int)(interfaceStats.BytesSent - BytesSent);
-				int bytesReceivedSpeed = (int)(interfaceStats.BytesReceived - BytesReceived);
-				Console.WriteLine("SPEED: " + nic.Speed.ToString());
-				Console.WriteLine ("INTERFACE TYPE: " + nic.NetworkInterfaceType.ToString ());
-				BytesReceived = interfaceStats.BytesReceived;
-				BytesSent = interfaceStats.BytesSent;
-				if (BytesSent > 0 || BytesReceived > 0 || bytesSentSpeed > 0 || bytesReceivedSpeed > 0)
-					throw new Exception ("FOUND IT");
-				Console.WriteLine ($"Bytes Sent: {BytesSent}");
-				Console.WriteLine ($"Bytes Received: {BytesReceived}");
-			}
+			NetworkInterface nic = nicArr [NIC];
+			IPv4InterfaceStatistics interfaceStats = nic.GetIPv4Statistics ();
+			long bytesSentSpeed = interfaceStats.BytesSent - BytesSent;
+			long bytesReceivedSpeed = interfaceStats.BytesReceived - BytesReceived;
+            BytesSent = interfaceStats.BytesSent;
+            BytesReceived = interfaceStats.BytesReceived;
+            NetworkInterfaceStatus dataSet = new NetworkInterfaceStatus();
+            dataSet.SentBytes = bytesSentSpeed;
+            dataSet.ReceivedBytes = bytesReceivedSpeed;
+            return dataSet;
 		}
 	}
 }

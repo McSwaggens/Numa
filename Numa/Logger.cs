@@ -6,7 +6,7 @@ namespace Numa
 {
 	public class Logger
 	{
-		public static LogMode mode = LogMode.Cache;
+		public static LogMode logMode = LogMode.Cache;
 		public static List<string> CachedLogs = new List<string> ();
 		public static bool Save = true;
 		public static readonly string FileLocation = Numa.NumaRootDirectory + "NumaLogs/";
@@ -15,13 +15,13 @@ namespace Numa
 
 		public static void Log(string text) {
 			text = "LOG\t" + text;
-			WriteColor (text, ConsoleColor.Black);
+			WriteColor (text, ConsoleColor.White);
 			Write (text);
 		}
 
 		public static void Warning(string text) {
 			text = "WARN\t" + text;
-			WriteColor (text, ConsoleColor.DarkYellow);
+			WriteColor (text, ConsoleColor.Yellow);
 			Write (text);
 		}
 
@@ -41,7 +41,7 @@ namespace Numa
 		private static void Write (string text) {
 			string TimeStampedText = $"[{DateTime.Now}]\t{text}";
 
-			if (mode == LogMode.Write) {
+			if (logMode == LogMode.Write) {
 				TimeStampedText += "\n";
 				File.AppendAllText(FileLocation + FileName, TimeStampedText);
 			}

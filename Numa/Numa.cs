@@ -2,6 +2,8 @@
 using System.IO;
 using Numa;
 using static Numa.Logger;
+using System.Threading;
+
 namespace Numa
 {
 	public class Numa
@@ -13,26 +15,37 @@ namespace Numa
 
 		public static void Main (string[] args)
 		{
-			Logger.Log ("Starting Numa...");
-			Logger.Log ("Checking environment...");
+			Log ("Starting Numa...");
+			Log ("Checking environment...");
 			if (!isRootDirectoryHealthy ()) {
-				Logger.Warning ("Nuna environment is eithr not healthy or is being booted for the first time...");
-				Logger.Log ("Repairing environment");
+				Warning ("Nuna environment is eithr not healthy or is being booted for the first time...");
+				Log ("Repairing environment");
 				RepairEnvironment ();
-				Logger.Log ("Successfully repaired environment...");
+				Log ("Successfully repaired environment...");
 			}
 
-			Logger.Log ("Pushing logs to live mode");
+			Log ("Pushing logs to live mode");
 
-			Logger.Push ();
-			Logger.mode = Logger.LogMode.Write;
+			Push ();
+			logMode = LogMode.Write;
 
+            Log("Initializing Network Interfaces...");
+
+            int nic = 1;
+
+            Log($"Using interface: " + nic);
 			Network.InitializeNetworkInterface ();
-			while (true)
-				Network.UpdateNetworkInterface ();
 
-			Logger.Warning ("Closing Numa...");
-			Logger.Log ("Bye!");
+            bool running = true;
+            while (running)
+            {
+                NetworkInterfaceStatus set = Network.fetchNetworkStatus(nic);
+                Console.WriteLine(set.ReceivedKiloBytes + " KB/s");
+                Thread.Sleep(1000);
+            }
+
+			Warning ("Closing Numa...");
+			Log ("Bye!");
 		}
 
 		public static void RepairEnvironment() {
