@@ -12,7 +12,7 @@ namespace Numa
 		public static string NumaRootDirectory = GetNumaRootDirectory();
 		public static bool isRootDirectoryHealthy() => (Directory.Exists (NumaRootDirectory) || Directory.Exists(NumaRootDirectory + "ConnectionLogs/") || Directory.Exists(NumaRootDirectory + "NumaLogs/"));
         
-        private static string GetNumaRootDirectory() { return OS_LINUX ? $"/Home/{Environment.UserName}/.numa/" : "$/User/{Environment.UserName}/.numa/"; }
+        private static string GetNumaRootDirectory() { return OS_LINUX ? $"/home/{Environment.UserName}/.numa/" : "$/User/{Environment.UserName}/.numa/"; }
 
 		public static void Main (string[] args)
 		{
