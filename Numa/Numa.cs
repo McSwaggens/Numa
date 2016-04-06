@@ -3,22 +3,23 @@ using System.IO;
 using Numa;
 using static Numa.Logger;
 using System.Threading;
+using static Numa.OSInfo;
 
 namespace Numa
 {
 	public class Numa
 	{
-		public static string NumaRootDirectory = $"/Users/{Environment.UserName}/.Numa/";
-		public static bool isRootDirectoryHealthy() {
-			return (Directory.Exists (NumaRootDirectory) || Directory.Exists(NumaRootDirectory + "ConnectionLogs/") || Directory.Exists(NumaRootDirectory + "NumaLogs/"));
-		}
+		public static string NumaRootDirectory = GetNumaRootDirectory();
+		public static bool isRootDirectoryHealthy() => (Directory.Exists (NumaRootDirectory) || Directory.Exists(NumaRootDirectory + "ConnectionLogs/") || Directory.Exists(NumaRootDirectory + "NumaLogs/"));
+        
+        private static string GetNumaRootDirectory() { return OS_LINUX ? $"/Home/{Environment.UserName}/.numa/" : "$/User/{Environment.UserName}/.numa/"; }
 
 		public static void Main (string[] args)
 		{
 			Log ("Starting Numa...");
 			Log ("Checking environment...");
 			if (!isRootDirectoryHealthy ()) {
-				Warning ("Nuna environment is eithr not healthy or is being booted for the first time...");
+				Warning ("Nuna environment is either not healthy or is being booted for the first time...");
 				Log ("Repairing environment");
 				RepairEnvironment ();
 				Log ("Successfully repaired environment...");
