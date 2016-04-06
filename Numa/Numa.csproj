@@ -40,6 +40,7 @@
     <Compile Include="NumaUtils.cs" />
     <Compile Include="Numa.cs" />
     <Compile Include="Network.cs" />
+    <Compile Inclue="OSInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
