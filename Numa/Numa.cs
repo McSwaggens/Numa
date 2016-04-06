@@ -4,19 +4,28 @@ using Numa;
 using static Numa.Logger;
 using System.Threading;
 using static Numa.OSInfo;
+using static Numa.Clas;
 
 namespace Numa
 {
 	public class Numa
 	{
+        
 		public static string NumaRootDirectory = GetNumaRootDirectory();
-		public static bool isRootDirectoryHealthy() => (Directory.Exists (NumaRootDirectory) || Directory.Exists(NumaRootDirectory + "ConnectionLogs/") || Directory.Exists(NumaRootDirectory + "NumaLogs/"));
+		private static bool isRootDirectoryHealthy() => (Directory.Exists (NumaRootDirectory) || Directory.Exists(NumaRootDirectory + "ConnectionLogs/") || Directory.Exists(NumaRootDirectory + "NumaLogs/"));
         
         private static string GetNumaRootDirectory() { return OS_LINUX ? $"/home/{Environment.UserName}/.numa/" : "$/User/{Environment.UserName}/.numa/"; }
 
 		public static void Main (string[] args)
 		{
+            LoadParams(args);
+            
+            if (!DO_EXECUTE) return;
+            
+            int nic = (int)Setters["nic"];
+            
 			Log ("Starting Numa...");
+            
 			Log ("Checking environment...");
 			if (!isRootDirectoryHealthy ()) {
 				Warning ("Nuna environment is either not healthy or is being booted for the first time...");
@@ -32,7 +41,6 @@ namespace Numa
 
             Log("Initializing Network Interfaces...");
 
-            int nic = 1;
 
             Log($"Using interface: " + nic);
 			Network.InitializeNetworkInterface ();
@@ -49,7 +57,7 @@ namespace Numa
 			Log ("Bye!");
 		}
 
-		public static void RepairEnvironment() {
+		private static void RepairEnvironment() {
 			if (!Directory.Exists(NumaRootDirectory))
 				Directory.CreateDirectory (NumaRootDirectory);
 			if (!Directory.Exists(NumaRootDirectory + "ConnectionLogs"))

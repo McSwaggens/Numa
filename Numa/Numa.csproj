@@ -41,6 +41,8 @@
     <Compile Include="Numa.cs" />
     <Compile Include="Network.cs" />
     <Compile Include="OSInfo.cs" />
+    <Compile Include="DataSize.cs" />
+    <Compile Include="Clas.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
